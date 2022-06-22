@@ -152,7 +152,7 @@ func main() {
 	openClient()
 	go openPresence()
 
-	for range time.Tick(time.Second) {
+	for range time.Tick(10 * time.Second) {
 		activity, err := getActivity()
 		if err != nil {
 			if errors.Is(err, syscall.EPIPE) {
