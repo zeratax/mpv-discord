@@ -28,7 +28,7 @@ jobs:
         cd mpv-discord 
         GOOS=${{ matrix.os }} GOARCH=amd64 go build -v -o ../bin/${{ matrix.os }}/mpv-discord${{ matrix.extension }}
       
-    - name: Upload a Build Artifact
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
         name: mpv-discord_${{ matrix.os }}
@@ -45,14 +45,15 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v3
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
 
-    - name: zip directories
+    - name: Zip build artifacts
       run: |
         dir_name=$(find mpv-discord_* -maxdepth 0 -type d)
         for i in $dir_name; do pushd $i; zip -r ../$i *; popd; done
 
-    - name: release
+    - name: Create release
       uses: softprops/action-gh-release@v1
       with:
         files: mpv-discord_*
